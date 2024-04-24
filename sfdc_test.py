@@ -200,11 +200,13 @@ def run_preload_reports():
         report_file_path = os.path.join("data", f"{view_name}.xlsx")
         if os.path.exists(report_file_path):
             os.remove(report_file_path)
-        con.sql(
-            f"""COPY (SELECT * from {view_name}) 
-            TO '{report_file_path}' 
-            WITH (FORMAT GDAL, DRIVER 'xlsx') """
-        )
+        # con.sql(
+        #     f"""COPY (SELECT * from {view_name}) 
+        #     TO '{report_file_path}' 
+        #     WITH (FORMAT GDAL, DRIVER 'xlsx') """
+        # )
+        df = con.sql(            f"""SELECT * from {view_name}"""   ).df()
+        df.to_excel(report_file_path, index= False)
         print(f"Created report {report_file_path}")
 
 
