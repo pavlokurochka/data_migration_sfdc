@@ -132,6 +132,8 @@ def refresh_staging(
             FROM tgt_{obj_name.lower()} 
             WHERE
             {stg_table}.{key_column} = tgt_{obj_name.lower()}.{key_column} """)
+    if obj_name == "Account":
+        stg_account_errors()
     print(f"Staging table {stg_table} is refreshed")
 
 
@@ -143,7 +145,7 @@ def load_in_sfdc(
     obj_name: str = "Account",
     key_column: str = "AccountNumber",
     src_table: str = "src_contractors",
-    batch_size: int = 100,
+    batch_size: int = 1000,
 ):
     # key_column = "AccountNumber"
     # obj_name = "Account"
@@ -153,23 +155,34 @@ def load_in_sfdc(
     sql = f"""SELECT * EXCLUDE (id, success, errors, source_table) 
             FROM {stg_table} 
             WHERE id IS NULL AND source_table ='{src_table}'
+            AND errors IS NULL
             LIMIT {batch_size}"""
-    print(sql)
+    # print(sql)
     payload = con.sql(sql).df().to_dict(orient="records")
 
     for a in tqdm(payload, desc=f"Loading {obj_name} into Salesforce.com"):
         # print(a)
-        result = sf.Account.create(a)
-        # print(result)
-        update_sql = f"""UPDATE {stg_table} SET id = '{result['id']}' 
-        , success = '{result['success']}'   
-        , errors = '{result['errors']}' 
-        WHERE {key_column} = '{a[key_column]}'  
-        """
+        try:
+            result = sf.Account.create(a)
+            # print(result)  
+            update_sql = f"""UPDATE {stg_table} SET id = '{result['id']}' 
+                , success = '{result['success']}'   
+                , errors = '{result['errors']}' 
+                WHERE {key_column} = '{a[key_column]}'  
+                """
+        except            Exception as err:
+                # print(type(err))
+                update_sql = f"""UPDATE {stg_table} SET   success = 'False'   
+                , errors = ['{str(type(err)).replace("'",'')}' ]
+                WHERE {key_column} = '{a[key_column]}'  
+                """
+                # print(update_sql)
+
+      
         con.sql(update_sql)
 
 
-# load_in_sfdc()
+load_in_sfdc()
 
 
 # %%
@@ -195,6 +208,32 @@ def run_preload_reports():
         print(f"Created report {report_file_path}")
 
 
+# %%
+def stg_account_errors():
+    sql = """update stg_account set errors = [dups.dup_number::varchar]
+            FROM
+            (with same_names as (
+            SELECT
+                Name
+            FROM
+                stg_account
+            group by
+                all
+            HAVING
+                count(1)>1) 
+            select
+                ss.Name,
+                ss.AccountNumber,
+                ROW_NUMBER() over( PARTITION by ss.Name
+            order by ss.id desc,
+                ss.AccountNumber) dup_number
+            from
+                stg_account ss
+            join same_names sn on
+                ss.Name = sn.Name) dups
+            where dups.AccountNumber = stg_account.AccountNumber
+            and dups.dup_number >1 """
+    con.sql(sql)
 # %%
 con.close()
 # %%
