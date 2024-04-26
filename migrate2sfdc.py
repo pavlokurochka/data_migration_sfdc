@@ -102,7 +102,7 @@ def load_mapping():
 def refresh_staging(
     obj_name: str = "Account",
     key_column: str = "AccountNumber",
-    src_table:str ="src_contractors",
+    src_table: str = "src_contractors",
 ):
     mapping_columns = con.sql(f"""SELECT 
             CASE 
@@ -141,6 +141,34 @@ def refresh_staging(
 
 
 # refresh_staging()
+# %%
+def create_postload_report(
+    obj_name: str = "Account",
+):
+    stg_table = f"stg_{obj_name.lower()}"
+    tgt_table = f"tgt_{obj_name.lower()}"
+    view = f"postload_{obj_name.lower()}"
+    sql = f"DESCRIBE {stg_table}"
+    tech_columns = "source_table id success errors".split()
+    all_columns = con.sql(sql).df()["column_name"]
+    comparisons = []
+    for col in all_columns:
+        if col in tech_columns:
+            continue
+        comparison = (
+            f"stg.{col} {col}_staged,  tgt.{col} {col}_loaded, "
+            + f"CASE WHEN coalesce(stg.{col},'X') != coalesce(tgt.{col},'X') THEN 'Y' END {col}_failed "
+        )
+        comparisons.append(comparison)
+    tech_columns_prefixed = [f"stg.{col}" for col in tech_columns]
+    sql = f"""CREATE OR REPLACE VIEW {view} AS
+            SELECT {','.join(comparisons)}
+            , {','.join(tech_columns_prefixed)} 
+            FROM {stg_table} stg LEFT JOIN  
+            {tgt_table} tgt on stg.id = tgt.id"""
+    # print(sql)
+    con.sql(sql)
+    print(f"Defined report {view}")
 
 
 # %%
@@ -188,17 +216,21 @@ def load_in_sfdc(
 
 
 # %%
-def create_preload_reports():
-    con.sql("""CREATE OR REPLACE VIEW preload_account as SELECT * from stg_account""")
-    print("Defined report preload_account")
+def create_preload_report(obj_name: str = "Account"):
+    stg_table = f"stg_{obj_name.lower()}"
+    view = f"preload_{obj_name.lower()}"
+    con.sql(f"""CREATE OR REPLACE VIEW {view} as SELECT * from {stg_table}""")
+    print(f"Defined report {view}")
+
 
 # create_preload_reports()
 # %%
-def run_preload_reports():
-    for view_name in list(
-        con.sql("""SELECT * from information_schema.tables 
-                WHERE table_type ='VIEW'""").df()["table_name"]
-    ):
+def run_reports(prefix: str | None = None):
+    meta_sql = """SELECT * from information_schema.tables 
+                WHERE table_type ='VIEW'"""
+    if prefix:
+        meta_sql += f" AND lower(table_name) LIKE '{prefix.lower()}%' "
+    for view_name in list(con.sql(meta_sql).df()["table_name"]):
         report_file_path = os.path.join("data", f"{view_name}.xlsx")
         if os.path.exists(report_file_path):
             os.remove(report_file_path)
@@ -210,6 +242,9 @@ def run_preload_reports():
         df = con.sql(f"""SELECT * from {view_name}""").df()
         df.to_excel(report_file_path, index=False)
         print(f"Created report {report_file_path}. {df.shape[0]} records.")
+
+
+# run_reports(prefix = 'post')
 
 
 # %%
@@ -325,22 +360,33 @@ if __name__ == "__main__":
     if args.action == "get_map":
         print("Refreshing maping table")
         load_mapping()
-    if args.action == "get_map":
-        print("Refreshing maping table")
-        load_mapping()
     if args.action == "stage":
         print("Creating or Refreshing Staging Table")
         refresh_staging(obj_name=obj_name, key_column=key_column, src_table=src_table)
     if args.action == "pre_load_create":
-        print("Creating Pre-load Reports")
-        create_preload_reports()
+        print(f"Creating Pre-load Reports for {obj_name}")
+        create_preload_report(
+            obj_name=obj_name,
+        )
     if args.action == "pre_load_run":
         print("Running Pre-load Reports")
-        run_preload_reports()
+        run_reports(prefix = 'pre')
+    if args.action == "post_load_create":
+        print(f"Creating Post-load Reports for {obj_name}")
+        create_postload_report(
+            obj_name=obj_name,
+        )
+    if args.action == "post_load_run":
+        print("Running Post-load Reports")
+        run_reports(prefix = 'post')
     if args.action == "load":
-        print(f"Strting the load: {vars(args)} ")
-        load_in_sfdc(obj_name=obj_name, key_column=key_column, src_table=src_table, batch_size = args.batch_size)
+        print(f"Starting the load: {vars(args)} ")
+        load_in_sfdc(
+            obj_name=obj_name,
+            key_column=key_column,
+            src_table=src_table,
+            batch_size=args.batch_size,
+        )
 
-
-# %%
-con.close()
+    # %%
+    con.close()
