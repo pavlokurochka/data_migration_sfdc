@@ -358,7 +358,7 @@ if __name__ == "__main__":
         print("Profiling table {src_table}")
         profile_db_table(src_table)
     if args.action == "get_map":
-        print("Refreshing maping table")
+        print("Refreshing mapping table")
         load_mapping()
     if args.action == "stage":
         print("Creating or Refreshing Staging Table")
