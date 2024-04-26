@@ -80,7 +80,7 @@ Paste following lines into it:
 
 ```bash
 SFDC_USERNAME="REPLACE_SFDC_USERNAME"
-SFDC_PASSWORD="REPLACE_SFDC_PASSWORD
+SFDC_PASSWORD="REPLACE_SFDC_PASSWORD"
 SFDC_SECURITY_TOKEN="REPLACE_SFDC_SECURITY_TOKEN"
 ```
 
@@ -209,5 +209,11 @@ python migrate2sfdc.py  --action load --obj_name Account --key_column AccountNum
 
 
 ## Summary
+
+Salesforce.com is very developer friendly platform. Great documentation. One of the best working and well documented python API wrappers that I worked with.
+
+Must be noted however, that default storage limits for sandbox environments do not land themselves to full data load tastings. This jeopardizes one of the biggest factors contributing to a successful data migration project - we need to load all data and preferably over several load-test-fix cycles. Otherwise the risk of discovery of the sleeper and potentially breaking data edge cases would be left unmitigated.
+
+Potential workarounds could be testing in batches and mass-deleting after every batch or loading batches into separate sandboxes. 
 
 ![](pictures/storage_limits.png)
