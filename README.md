@@ -3,7 +3,6 @@
 [TOC]
 
 
-
 ## Objective
 
 I think I've been passed over by several recruiters for Salesforce.com data migration gigs with the excuse that I can't demonstrate specific skills of loading data into Salseforce.com. My arguments that I 'was exposed' to SFDC on several previous projects, that I worked with many other CRMs and that these conversations are like "asking an experienced carpenter if he can build an orange house" seem to fall in deaf ears. I guess everybody says that. OK, so here is me show-and-telling: I know how to migrate data into Salesforce.com.
@@ -30,7 +29,7 @@ I saved all downloaded source files into the `data` folder: [src_mine_informatio
 
 ## Infrastructure
 
-The project is build around the Python command line (CLI) application that manipulates that data in the [DuckDB](https://duckdb.org/docs/) database. I use Python module [simple-salesforce](https://pypi.org/project/simple-salesforce/) to read data from and load into Salesforce.com. While off the shelf tools like [Data Loader](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/data_loader_intro.htm) and Import Wizards exist, i think this way is much better to integrate into the overall flow and methodology and to automate many manual steps. Application saves reports into Excel files.
+The project is build around the Python command line (CLI) application that manipulates the data in the [DuckDB](https://duckdb.org/docs/) database. I use Python module [simple-salesforce](https://pypi.org/project/simple-salesforce/) to read data from and load into Salesforce.com. While off the shelf tools like [Data Loader](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/data_loader_intro.htm) and Import Wizards exist, i think this way is much better to integrate into the overall flow and methodology and to automate many manual steps. This application saves reports into Excel files.
 
 ### Environment setup 
 
@@ -268,7 +267,7 @@ python migrate2sfdc.py  --action post_load_run
 
 ## Summary
 
-Salesforce.com is a very developer friendly platform. Great documentation. One of the best working and well documented python API wrappers that I worked with.
+Salesforce.com is a very developer friendly platform. Great documentation. One of the best working and well documented Python API wrappers that I worked with.
 
 Must be noted however, that default storage limits for sandbox environments are not conducive to comprehensive data load testing. This poses a significant risk to the success of data migration projects, as it’s crucial to load all data, ideally through multiple load-test-fix cycles. Without this, we leave ourselves exposed to the potential discovery of dormant and likely breaking data edge cases that remain unaddressed.
 
