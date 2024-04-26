@@ -266,7 +266,7 @@ python migrate2sfdc.py  --action post_load_run
 
 Salesforce.com is a very developer friendly platform. Great documentation. One of the best working and well documented python API wrappers that I worked with.
 
-Must be noted however, that default storage limits for sandbox environments do not land themselves to full data load testings. This jeopardizes one of the biggest factors contributing to a successful data migration project - we need to load all data and preferably over several load-test-fix cycles. Otherwise the risk of discovery of the sleeper and potentially breaking data edge cases would be left unmitigated.
+Must be noted however, that default storage limits for sandbox environments sandbox environments are not conducive to comprehensive data load testing. This poses a significant risk to the success of data migration projects, as it’s crucial to load all data, ideally through multiple load-test-fix cycles. Without this, we leave ourselves exposed to the potential discovery of dormant and potentially disruptive data edge cases that remain unaddressed.
 
 Potential workarounds could be testing in batches and mass-deleting after every batch or loading batches into separate sandboxes. 
 
