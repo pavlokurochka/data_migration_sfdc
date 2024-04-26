@@ -178,9 +178,9 @@ Again if more elaborate transformation would be required we can generate SQL mod
 python migrate2sfdc.py --action stage --obj_name Account --key_column AccountNumber --src_table src_contractors
 ```
 
-`Data Migration into Salesforce.com
-Creating or Refreshing Staging Table
-Staging table stg_account is refreshed`
+`Data Migration into Salesforce.com`
+`Creating or Refreshing Staging Table`
+`Staging table stg_account is refreshed`
 
 ### Produce Pre-Load report
 
@@ -190,17 +190,17 @@ We generate preload reports as simple views on the staging tables. They contain 
 python migrate2sfdc.py  --action pre_load_create --obj_name Account
 ```
 
-`Data Migration into Salesforce.com
-Creating Pre-load Reports for Account
-Defined report preload_account`
+`Data Migration into Salesforce.com`
+`Creating Pre-load Reports for Account`
+`Defined report preload_account`
 
 ```bash
 python migrate2sfdc.py  --action pre_load_run
 ```
 
-`Data Migration into Salesforce.com
-Running Pre-load Reports
-Created report data\preload_account.xlsx. 87098 records.`
+`Data Migration into Salesforce.com`
+`Running Pre-load Reports`
+`Created report data\preload_account.xlsx. 87098 records.`
 
 ### 
 
