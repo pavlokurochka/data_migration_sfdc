@@ -179,7 +179,9 @@ python migrate2sfdc.py --action stage --obj_name Account --key_column AccountNum
 ```
 
 `Data Migration into Salesforce.com`
+
 `Creating or Refreshing Staging Table`
+
 `Staging table stg_account is refreshed`
 
 ### Produce Pre-Load report
