@@ -235,7 +235,7 @@ python migrate2sfdc.py  --action load --obj_name Account --key_column AccountNum
 
 ### Produce Post-Load Report
 
-NOTE: Remember to Source Tables Snapshot before performing this step.
+NOTE: Remember to repeat `Target Tables Snapshot` step before performing this step.
 
 Post-Load reports are generated for column by column comparison to validate that all data is loaded as it was staged. Sample reports are included in the `data` folder. 
 
