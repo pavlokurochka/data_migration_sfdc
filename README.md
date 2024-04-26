@@ -26,7 +26,7 @@ I saved all downloaded source files into the `data` folder: [src_mine_informatio
 
 ## Infrastructure
 
-The project is build around the Python command line (CLI) application that manipulates that data in the [DuckDB](https://duckdb.org/docs/) database. I use python module [simple-salesforce](https://pypi.org/project/simple-salesforce/) to read data from and load into Salesforce.com. While off the shelf tools like [Data Loader](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/data_loader_intro.htm) and Import Wizards exist, i think this way is much better to integrate into the overall flow and methodology and to automate many manual steps. Application saves report in Excel files.
+The project is build around the Python command line (CLI) application that manipulates that data in the [DuckDB](https://duckdb.org/docs/) database. I use Python module [simple-salesforce](https://pypi.org/project/simple-salesforce/) to read data from and load into Salesforce.com. While off the shelf tools like [Data Loader](https://developer.salesforce.com/docs/atlas.en-us.dataLoader.meta/dataLoader/data_loader_intro.htm) and Import Wizards exist, i think this way is much better to integrate into the overall flow and methodology and to automate many manual steps. Application saves reports into Excel files.
 
 ### Environment setup 
 
@@ -36,12 +36,10 @@ Alternatively, you can run this code on GitHub [codespaces](https://github.com/c
 
  ![](pictures/open_codespaces.png)
 
-We are using several Python modules that need to be installed: [duckdb](https://duckdb.org/docs/guides/python/install.html), [Simple Salesforce](https://pypi.org/project/simple-salesforce/) 
-
-### TODO
+We are using several Python modules that need to be installed so locally or on codespaces run this command in your terminal.
 
 ```bash
-pip install
+pip install -r requirements.txt
 ```
 
 
@@ -167,7 +165,7 @@ python migrate2sfdc.py  --action profile --src_table src_contractors
 
 ### Column Mapping
 
-We enter column mapping into [mapping.xlsx](data/mapping.xlsx). We get target column list from the tgt reports above. Just paste special/ transpose them into `target_field` column.  Enter mapping information referring to the format provided in the included file.
+We enter column mapping into [mapping.xlsx](data/mapping.xlsx). We get target column list from the tgt reports above. Just paste special / transpose them into `target_field` column.  Enter mapping information in the format provided in the included sample file.
 
 ![](pictures/mapping.png)
 
@@ -225,8 +223,6 @@ python migrate2sfdc.py  --action pre_load_run
 
 `Created report data\preload_account.xlsx. 87098 records.`
 
-### 
-
 ### Load into Target System
 
 We load eligible records into salesforce.com with the help of simple_salesforce. Loaded records get updated with their salesforce unique id. Failed records are updated with the error message from the simple_salesforce. 
@@ -268,7 +264,7 @@ python migrate2sfdc.py  --action post_load_run
 
 ## Summary
 
-Salesforce.com is very developer friendly platform. Great documentation. One of the best working and well documented python API wrappers that I worked with.
+Salesforce.com is a very developer friendly platform. Great documentation. One of the best working and well documented python API wrappers that I worked with.
 
 Must be noted however, that default storage limits for sandbox environments do not land themselves to full data load tastings. This jeopardizes one of the biggest factors contributing to a successful data migration project - we need to load all data and preferably over several load-test-fix cycles. Otherwise the risk of discovery of the sleeper and potentially breaking data edge cases would be left unmitigated.
 
