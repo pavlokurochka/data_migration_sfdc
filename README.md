@@ -98,14 +98,12 @@ If we'd have some other sources based on databases we could use more advanced lo
 python migrate2sfdc.py  --action get_src
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Refreshing Source Tables Snapshot
 Read 89900 records from data\src_addresses_of_record.xlsx
 Read 87098 records from data\src_contractors.xlsx
 Read 90587 records from data\src_mine_information.xlsx
-Read 90196 records from data\src_operator_report.xlsx
-```
+Read 90196 records from data\src_operator_report.xlsx`
 
 
 
@@ -117,8 +115,7 @@ We read all records for selected objects from salesforce.com with the help of si
 python migrate2sfdc.py  --action get_tgt
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Refreshing Target Tables Snapshot
 Dowloaded 2340 records for Account 
  saved into table tgt_account 
@@ -126,8 +123,7 @@ Dowloaded 2340 records for Account
 Dowloaded 0 records for Address 
 Dowloaded 20 records for Contact 
  saved into table tgt_contact 
- saved into file data\tgt_contact.xlsx 
-```
+ saved into file data\tgt_contact.xlsx` 
 
 
 
@@ -139,10 +135,10 @@ We can get some table summaries with the command below. For detailed analysis I 
 python migrate2sfdc.py  --action profile --src_table src_contractors
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Profiling table {src_table}
-SUMMARIZE src_contractors
+SUMMARIZE src_contractors`
+
 | column_name        | column_type   | min                     | max             |   approx_unique |   count | null_percentage   |
 |:-------------------|:--------------|:------------------------|:----------------|----------------:|--------:|:------------------|
 | Contractor ID      | VARCHAR       | 073                     | ZZZ             |           87368 |   87098 | 0.0%              |
@@ -153,7 +149,6 @@ SUMMARIZE src_contractors
 | Street             | VARCHAR       | 5129 GILBERTSVILLE HWY. | w7022 hwy 11    |           57355 |   87098 | 31.21%            |
 | State Abbreviation | VARCHAR       | AK                      | WY              |              57 |   87098 | 0.21%             |
 | Zip Code           | DOUBLE        | 0.0                     | 998019115.0     |           20900 |   87098 | 0.22%             |
-```
 
 ### Column Mapping
 
@@ -167,11 +162,9 @@ When finished, save the mapping file and run the below command to upload the map
 python migrate2sfdc.py --action get_map
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Refreshing maping table
-Loaded 67 records from data\mapping.xlsx
-```
+Loaded 67 records from data\mapping.xlsx`
 
 ### Create or Refresh Staging Table
 
@@ -185,11 +178,9 @@ Again if more elaborate transformation would be required we can generate SQL mod
 python migrate2sfdc.py --action stage --obj_name Account --key_column AccountNumber --src_table src_contractors
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Creating or Refreshing Staging Table
-Staging table stg_account is refreshed
-```
+Staging table stg_account is refreshed`
 
 ### Produce Pre-Load report
 
@@ -199,21 +190,17 @@ We generate preload reports as simple views on the staging tables. They contain 
 python migrate2sfdc.py  --action pre_load_create --obj_name Account
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Creating Pre-load Reports for Account
-Defined report preload_account
-```
+Defined report preload_account`
 
 ```bash
 python migrate2sfdc.py  --action pre_load_run
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Running Pre-load Reports
-Created report data\preload_account.xlsx. 87098 records.
-```
+Created report data\preload_account.xlsx. 87098 records.`
 
 ### 
 
@@ -237,24 +224,20 @@ Post-Load reports are generated for column by column comparison to validate that
 python migrate2sfdc.py  --action post_load_create --obj_name Account
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Creating Post-load Reports for Account
-Defined report postload_account
-```
+Defined report postload_account`
 
 ```bash
 python migrate2sfdc.py  --action get_tgt
 python migrate2sfdc.py  --action post_load_run
 ```
 
-```
-Data Migration into Salesforce.com
+`Data Migration into Salesforce.com
 Running Post-load Reports
-Created report data\postload_account.xlsx. 87098 records.
-```
+Created report data\postload_account.xlsx. 87098 records.`
 
-### 
+
 
 ## Summary
 
