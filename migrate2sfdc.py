@@ -355,7 +355,7 @@ if __name__ == "__main__":
         print("Refreshing Target Tables Snapshot")
         refresh_tgt_tables()
     if args.action == "profile":
-        print("Profiling table {src_table}")
+        print(f"Profiling table {src_table}")
         profile_db_table(src_table)
     if args.action == "get_map":
         print("Refreshing mapping table")
