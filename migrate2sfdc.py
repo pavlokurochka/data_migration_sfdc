@@ -49,7 +49,7 @@ def refresh_tgt_tables(tables: list | None = None):
         df = pd.DataFrame(
             sf.query_all(f"""SELECT {','.join(names)} FROM {obj_name}""")["records"]
         )
-        print(f"Dowloaded {df.shape[0]} records for {obj_name} ")
+        print(f"Downloaded {df.shape[0]} records for {obj_name} ")
         if df.shape[0] == 0:
             continue
         con.sql(f"DROP table IF EXISTS {table_name}")
