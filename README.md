@@ -151,7 +151,7 @@ python migrate2sfdc.py  --action profile --src_table src_contractors
 
 `Data Migration into Salesforce.com`
 
-`Profiling table {src_table}`
+`Profiling table src_contractors`
 
 `SUMMARIZE src_contractors`
 
